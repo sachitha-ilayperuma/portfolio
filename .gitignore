@@ -10,7 +10,11 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+#firebaseconfig
+/src/lib/firebase/config.ts
+
+
+# testings
 /coverage
 
 # next.js
