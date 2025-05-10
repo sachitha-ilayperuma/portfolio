@@ -1,26 +1,181 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Light mode - white background */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 240 98% 14%; /* #020447 - dark blue for text */
+
+    /* Using the requested colors more prominently */
+    --primary: 214 93% 37%; /* #0662b8 - medium blue */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+
+    --secondary: 240 98% 14%; /* #020447 - dark blue */
+    --secondary-foreground: 0 0% 100%; /* White text on secondary */
+
+    /* Make destructive (dark red) more prominent by using it for accents */
+    --destructive: 0 87% 21%; /* #660505 - dark red */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive */
+
+    /* Using dark red for accent elements */
+    --accent: 0 87% 95%; /* Light version of dark red for accent backgrounds */
+    --accent-foreground: 0 87% 21%; /* Dark red text on accent */
+
+    --card: 0 0% 100%; /* White card background */
+    --card-foreground: 240 98% 14%; /* Dark blue text on cards */
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 98% 14%;
+
+    --muted: 214 93% 95%; /* Light blue for muted backgrounds */
+    --muted-foreground: 214 93% 30%; /* Darker blue for muted text */
+
+    --border: 0 87% 85%; /* Light border color based on dark red */
+    --input: 214 93% 90%;
+    --ring: 0 87% 21%; /* #660505 - dark red for focus rings */
+    --radius: 0.5rem;
+
+    /* Sidebar variables */
+    --sidebar-background: 0 0% 100%; /* White sidebar background */
+    --sidebar-foreground: 240 98% 14%; /* Dark blue text in sidebar */
+    --sidebar-primary: 214 93% 37%; /* #0662b8 - medium blue */
+    --sidebar-primary-foreground: 0 0% 100%; /* White text on primary */
+    --sidebar-accent: 0 87% 95%; /* Light accent color based on dark red */
+    --sidebar-accent-foreground: 0 87% 21%; /* Dark red text on accent */
+    --sidebar-border: 0 87% 85%; /* Light border color based on dark red */
+    --sidebar-ring: 0 87% 21%; /* #660505 - dark red */
+  }
+
+  .dark {
+    /* Dark mode - completely different color scheme as requested */
+    --background: 240 10% 10%; /* Dark gray background instead of dark blue */
+    --foreground: 0 0% 100%; /* White text */
+
+    --primary: 214 93% 37%; /* #0662b8 - medium blue */
+    --primary-foreground: 0 0% 100%; /* White text on primary */
+
+    --secondary: 240 98% 14%; /* #020447 - dark blue */
+    --secondary-foreground: 0 0% 100%; /* White text on secondary */
+
+    /* Make dark red more prominent in dark mode */
+    --destructive: 0 87% 21%; /* #660505 - dark red */
+    --destructive-foreground: 0 0% 100%; /* White text on destructive */
+
+    --card: 240 10% 15%; /* Slightly lighter dark gray for cards */
+    --card-foreground: 0 0% 100%; /* White text on cards */
+
+    --popover: 240 10% 15%;
+    --popover-foreground: 0 0% 100%;
+
+    --muted: 240 10% 20%; /* Muted background */
+    --muted-foreground: 0 0% 80%; /* Muted text */
+
+    /* Using dark red for accent elements in dark mode too */
+    --accent: 0 87% 15%; /* Darker version of dark red for accent backgrounds */
+    --accent-foreground: 0 0% 100%; /* White text on accent */
+
+    --border: 240 10% 20%; /* Border color */
+    --input: 240 10% 20%;
+    --ring: 0 87% 30%; /* Brighter dark red for focus rings in dark mode */
+
+    /* Sidebar variables */
+    --sidebar-background: 240 10% 10%; /* Dark gray sidebar background */
+    --sidebar-foreground: 0 0% 100%; /* White text in sidebar */
+    --sidebar-primary: 214 93% 37%; /* #0662b8 - medium blue */
+    --sidebar-primary-foreground: 0 0% 100%; /* White text on primary */
+    --sidebar-accent: 0 87% 15%; /* Dark accent color based on dark red */
+    --sidebar-accent-foreground: 0 0% 100%; /* White text on accent */
+    --sidebar-border: 240 10% 20%; /* Border color */
+    --sidebar-ring: 0 87% 30%; /* Brighter dark red for focus rings */
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.bg-grid-white\/\[0\.02\] {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' width='32' height='32' fill='none' stroke='rgb(255 255 255 / 0.02)'%3e%3cpath d='M0 .5H31.5V32'/%3e%3c/svg%3e");
+}
+
+/* Custom color classes for direct use */
+.text-darkblue {
+  color: #020447;
+}
+
+.text-mediumblue {
+  color: #0662b8;
+}
+
+.text-darkred {
+  color: #660505;
+}
+
+.bg-darkblue {
+  background-color: #020447;
+}
+
+.bg-mediumblue {
+  background-color: #0662b8;
+}
+
+.bg-darkred {
+  background-color: #660505;
+}
+
+/* Custom hero section with all three colors */
+.hero-gradient {
+  background: linear-gradient(135deg, #020447 0%, #0662b8 50%, #660505 100%);
+  color: white;
+}
+
+/* Section backgrounds with each color */
+.section-darkblue {
+  background-color: #020447;
+  color: white;
+}
+
+.section-mediumblue {
+  background-color: #0662b8;
+  color: white;
+}
+
+.section-darkred {
+  background-color: #660505;
+  color: white;
+}
+
+/* Button styles using our theme colors */
+.btn-darkblue {
+  background-color: #020447;
+  color: white;
+}
+
+.btn-darkblue:hover {
+  background-color: #01032e;
+}
+
+.btn-mediumblue {
+  background-color: #0662b8;
+  color: white;
+}
+
+.btn-mediumblue:hover {
+  background-color: #0550a0;
+}
+
+.btn-darkred {
+  background-color: #660505;
+  color: white;
+}
+
+.btn-darkred:hover {
+  background-color: #550404;
 }
