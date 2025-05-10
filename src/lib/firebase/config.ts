@@ -8,13 +8,7 @@ let isFirebaseAvailable = false
 
 // Default Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyDtiks84Vzp-AGuch-z3b7pTEy-HRmM55M",
-  authDomain: "web-portfolio-1ed6c.firebaseapp.com",
-  projectId: "web-portfolio-1ed6c",
-  storageBucket: "web-portfolio-1ed6c.firebasestorage.app",
-  messagingSenderId: "165855261171",
-  appId: "1:165855261171:web:34e22f15f33d8e4ee2e286",
-  measurementId: "G-DRC0EMZZ45"
+
 };
 
 // Initialize Firebase only if all required config values are present
