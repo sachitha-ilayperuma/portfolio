@@ -8,6 +8,8 @@ import { fetchSkills } from "@/lib/firebase/skills"
 import { fetchSectionVisibility } from "@/lib/firebase/sections"
 import { checkFirebaseAvailability } from "@/lib/firebase/config"
 import { Code, Database, Server, Globe, Cpu, GitBranch, Layers, Workflow, BrainCircuit, Users } from "lucide-react"
+import { FadeIn } from "@/components/animations/fade-in"
+import { StaggerIn } from "@/components/animations/stagger-in"
 
 interface Skill {
   id: string
@@ -213,13 +215,15 @@ export function SkillsSection() {
 
   return (
     <section id="skills" className="py-12">
-      <h2 className="mb-8 text-3xl font-bold">Skills</h2>
+      <FadeIn direction="up">
+        <h2 className="mb-8 text-3xl font-bold">Skills</h2>
+      </FadeIn>
       {error && (
         <div className="mb-4 rounded-md bg-amber-50 p-4 text-amber-800">
           <p>{error}</p>
         </div>
       )}
-      <div className="grid gap-6 md:grid-cols-2">
+      <StaggerIn direction="up" delayIncrement={0.15} threshold={0.1} className="grid gap-6 md:grid-cols-2">
         {categories.map((category) => {
           const categorySkills = skills.filter((skill) => skill.category === category)
           const colorStyle = getCategoryColor(category)
@@ -230,7 +234,7 @@ export function SkillsSection() {
             <Card key={category} className={`border-2 ${borderColor}`}>
               <CardContent className="p-6">
                 <h3 className={`mb-4 text-xl font-semibold ${headingColor}`}>{category}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <StaggerIn direction="up" delayIncrement={0.05} initialDelay={0.1} className="grid grid-cols-2 gap-4">
                   {categorySkills.map((skill) => (
                     <div key={skill.id} className="flex items-center gap-2">
                       <div
@@ -241,12 +245,12 @@ export function SkillsSection() {
                       <span className="font-medium">{skill.name}</span>
                     </div>
                   ))}
-                </div>
+                </StaggerIn>
               </CardContent>
             </Card>
           )
         })}
-      </div>
+      </StaggerIn>
     </section>
   )
 }

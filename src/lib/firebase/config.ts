@@ -8,13 +8,14 @@ let isFirebaseAvailable = false
 
 // Default Firebase config
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "",
-}
+  apiKey: "AIzaSyDtiks84Vzp-AGuch-z3b7pTEy-HRmM55M",
+  authDomain: "web-portfolio-1ed6c.firebaseapp.com",
+  projectId: "web-portfolio-1ed6c",
+  storageBucket: "web-portfolio-1ed6c.firebasestorage.app",
+  messagingSenderId: "165855261171",
+  appId: "1:165855261171:web:34e22f15f33d8e4ee2e286",
+  measurementId: "G-DRC0EMZZ45"
+};
 
 // Initialize Firebase only if all required config values are present
 let app, auth, db, storage

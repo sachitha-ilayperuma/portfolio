@@ -7,6 +7,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Toaster } from "@/components/ui/toaster"
 import { AuthProvider } from "@/lib/auth-provider"
+import { ScrollProgress } from "@/components/scroll-progress"
 
 // Import Firebase config to ensure it's initialized at the app root
 import "@/lib/firebase/config"
@@ -35,6 +36,7 @@ export default function RootLayout({
             disableTransitionOnChange
             storageKey="portfolio-theme"
           >
+            <ScrollProgress />
             <div className="relative flex min-h-screen flex-col">
               <Navbar />
               <div className="flex-1">{children}</div>

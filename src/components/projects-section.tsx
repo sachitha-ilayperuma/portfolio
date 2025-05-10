@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { fetchProjects } from "@/lib/firebase/projects"
 import { fetchSectionVisibility } from "@/lib/firebase/sections"
 import { checkFirebaseAvailability } from "@/lib/firebase/config"
+import { FadeIn } from "@/components/animations/fade-in"
+import { StaggerIn } from "@/components/animations/stagger-in"
 
 interface Project {
   id: string
@@ -142,14 +144,22 @@ export function ProjectsSection() {
 
   return (
     <section id="projects" className="py-12">
-      <h2 className="mb-8 text-3xl font-bold">Projects</h2>
+      <FadeIn direction="up">
+        <h2 className="mb-8 text-3xl font-bold">Projects</h2>
+      </FadeIn>
       {error && (
         <div className="mb-4 rounded-md bg-amber-50 p-4 text-amber-800">
           <p>{error}</p>
         </div>
       )}
       {projects.length > 0 ? (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <StaggerIn
+          direction="up"
+          delayIncrement={0.1}
+          initialDelay={0.2}
+          threshold={0.1}
+          className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+        >
           {projects.map((project, index) => (
             <Card key={project.id} className={`overflow-hidden flex flex-col border-2 ${getProjectColor(index)}`}>
               <Link href={`/projects/${project.id}`} className="group">
@@ -209,7 +219,7 @@ export function ProjectsSection() {
               </CardFooter>
             </Card>
           ))}
-        </div>
+        </StaggerIn>
       ) : (
         <Card className="p-8 text-center">
           <p className="text-muted-foreground">No projects to display.</p>

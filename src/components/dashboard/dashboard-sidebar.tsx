@@ -13,6 +13,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  SidebarRail,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -27,7 +28,7 @@ export function DashboardSidebar() {
   }
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader className="flex items-center justify-between p-4">
         <Link href="/" className="flex items-center gap-2 font-semibold">
           Portfolio Admin
@@ -40,7 +41,7 @@ export function DashboardSidebar() {
       <SidebarContent>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard")} tooltip="Dashboard">
               <Link href="/dashboard">
                 <BarChart3 />
                 <span>Dashboard</span>
@@ -48,7 +49,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/profile")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/profile")} tooltip="Profile">
               <Link href="/dashboard/profile">
                 <User />
                 <span>Profile</span>
@@ -56,7 +57,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/projects")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/projects")} tooltip="Projects">
               <Link href="/dashboard/projects">
                 <Layers />
                 <span>Projects</span>
@@ -64,7 +65,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/skills")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/skills")} tooltip="Skills">
               <Link href="/dashboard/skills">
                 <Code />
                 <span>Skills</span>
@@ -72,7 +73,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/experience")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/experience")} tooltip="Experience">
               <Link href="/dashboard/experience">
                 <Briefcase />
                 <span>Experience</span>
@@ -80,7 +81,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/education")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/education")} tooltip="Education">
               <Link href="/dashboard/education">
                 <GraduationCap />
                 <span>Education</span>
@@ -88,7 +89,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/interests")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/interests")} tooltip="Interests">
               <Link href="/dashboard/interests">
                 <Heart />
                 <span>Interests</span>
@@ -96,7 +97,7 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild isActive={isActive("/dashboard/settings")}>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/settings")} tooltip="Settings">
               <Link href="/dashboard/settings">
                 <Settings />
                 <span>Settings</span>
@@ -111,6 +112,7 @@ export function DashboardSidebar() {
           <span>Log out</span>
         </Button>
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   )
 }

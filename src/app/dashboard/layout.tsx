@@ -6,7 +6,7 @@ import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/lib/auth-hooks"
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
 import { Loader } from "@/components/ui/loader"
 
 export default function DashboardLayout({
@@ -37,9 +37,9 @@ export default function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen overflow-hidden">
+      <div className="flex h-screen w-full overflow-auto">
         <DashboardSidebar />
-        <div className="flex-1 overflow-auto">{children}</div>
+        <SidebarInset className="flex-1 w-full">{children}</SidebarInset>
       </div>
     </SidebarProvider>
   )
