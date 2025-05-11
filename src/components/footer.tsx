@@ -22,7 +22,7 @@ export function Footer() {
         </div>
         <div className="flex items-center gap-4">
           <Link
-            href="https://github.com"
+            href="https://github.com/sachitha-ilayperuma"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground"
@@ -31,7 +31,7 @@ export function Footer() {
             <span className="sr-only">GitHub</span>
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="https://linkedin.com/in/sachitha-ilayperuma"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground"
@@ -39,7 +39,7 @@ export function Footer() {
             <Linkedin className="h-5 w-5" />
             <span className="sr-only">LinkedIn</span>
           </Link>
-          <Link href="mailto:contact@example.com" className="text-muted-foreground hover:text-foreground">
+          <Link href="mailto:snilayperuma@gmail.com" className="text-muted-foreground hover:text-foreground">
             <Mail className="h-5 w-5" />
             <span className="sr-only">Email</span>
           </Link>
