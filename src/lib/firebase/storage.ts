@@ -24,3 +24,9 @@ export async function uploadAdditionalProjectImage(file: File): Promise<string> 
   const snapshot = await uploadBytes(storageRef, file)
   return getDownloadURL(snapshot.ref)
 }
+
+export async function uploadSkillIcon(file: File): Promise<string> {
+  const storageRef = ref(storage, `skills/icons/${Date.now()}_${file.name}`)
+  const snapshot = await uploadBytes(storageRef, file)
+  return getDownloadURL(snapshot.ref)
+}

@@ -5,16 +5,16 @@ const COLLECTION_NAME = "skills"
 
 // Default skills data
 const DEFAULT_SKILLS = [
-  { id: "1", name: "JavaScript", category: "Frontend" },
-  { id: "2", name: "React", category: "Frontend" },
-  { id: "3", name: "TypeScript", category: "Frontend" },
-  { id: "4", name: "Node.js", category: "Backend" },
-  { id: "5", name: "Express", category: "Backend" },
-  { id: "6", name: "Firebase", category: "Backend" },
-  { id: "7", name: "Git", category: "Tools" },
-  { id: "8", name: "AWS", category: "DevOps & Cloud" },
-  { id: "9", name: "Docker", category: "DevOps & Cloud" },
-  { id: "10", name: "Agile Methodologies", category: "Soft Skills" },
+  { id: "1", name: "JavaScript", category: "Frontend", icon: "Code" },
+  { id: "2", name: "React", category: "Frontend", icon: "Code" },
+  { id: "3", name: "TypeScript", category: "Frontend", icon: "Code" },
+  { id: "4", name: "Node.js", category: "Backend", icon: "Server" },
+  { id: "5", name: "Express", category: "Backend", icon: "Server" },
+  { id: "6", name: "Firebase", category: "Backend", icon: "Database" },
+  { id: "7", name: "Git", category: "Tools", icon: "GitBranch" },
+  { id: "8", name: "AWS", category: "DevOps & Cloud", icon: "Cloud" },
+  { id: "9", name: "Docker", category: "DevOps & Cloud", icon: "Layers" },
+  { id: "10", name: "Agile Methodologies", category: "Soft Skills", icon: "Users" },
 ]
 
 export interface Skill {
@@ -22,6 +22,8 @@ export interface Skill {
   name: string
   level?: number // Make level optional
   category: string
+  icon?: string // Lucide icon name
+  iconUrl?: string // Custom uploaded icon URL
 }
 
 export async function fetchSkills(): Promise<Skill[]> {

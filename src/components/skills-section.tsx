@@ -1,13 +1,33 @@
 "use client"
 
-import type React from "react"
-
 import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { fetchSkills } from "@/lib/firebase/skills"
 import { fetchSectionVisibility } from "@/lib/firebase/sections"
 import { checkFirebaseAvailability } from "@/lib/firebase/config"
-import { Code, Database, Server, Globe, Cpu, GitBranch, Layers, Workflow, BrainCircuit, Users } from "lucide-react"
+import {
+  Code,
+  Database,
+  Server,
+  Globe,
+  Cpu,
+  GitBranch,
+  Layers,
+  Workflow,
+  BrainCircuit,
+  Users,
+  Cloud,
+  Terminal,
+  Laptop,
+  Smartphone,
+  Zap,
+  FileCode,
+  Puzzle,
+  PenToolIcon as Tool,
+  Wrench,
+  Settings,
+  type LucideIcon,
+} from "lucide-react"
 import { FadeIn } from "@/components/animations/fade-in"
 import { StaggerIn } from "@/components/animations/stagger-in"
 
@@ -15,54 +35,48 @@ interface Skill {
   id: string
   name: string
   category: string
+  icon?: string
+  iconUrl?: string
 }
 
 // Default skills data
 const DEFAULT_SKILLS: Skill[] = [
-  { id: "1", name: "JavaScript", category: "Frontend" },
-  { id: "2", name: "React", category: "Frontend" },
-  { id: "3", name: "TypeScript", category: "Frontend" },
-  { id: "4", name: "HTML/CSS", category: "Frontend" },
-  { id: "5", name: "Node.js", category: "Backend" },
-  { id: "6", name: "Express", category: "Backend" },
-  { id: "7", name: "MongoDB", category: "Backend" },
-  { id: "8", name: "PostgreSQL", category: "Backend" },
-  { id: "9", name: "AWS", category: "DevOps & Cloud" },
-  { id: "10", name: "Docker", category: "DevOps & Cloud" },
-  { id: "11", name: "Git", category: "Tools" },
-  { id: "12", name: "Agile Methodologies", category: "Soft Skills" },
+  { id: "1", name: "JavaScript", category: "Frontend", icon: "Code" },
+  { id: "2", name: "React", category: "Frontend", icon: "Code" },
+  { id: "3", name: "TypeScript", category: "Frontend", icon: "Code" },
+  { id: "4", name: "HTML/CSS", category: "Frontend", icon: "Globe" },
+  { id: "5", name: "Node.js", category: "Backend", icon: "Server" },
+  { id: "6", name: "Express", category: "Backend", icon: "Server" },
+  { id: "7", name: "MongoDB", category: "Backend", icon: "Database" },
+  { id: "8", name: "PostgreSQL", category: "Backend", icon: "Database" },
+  { id: "9", name: "AWS", category: "DevOps & Cloud", icon: "Cloud" },
+  { id: "10", name: "Docker", category: "DevOps & Cloud", icon: "Layers" },
+  { id: "11", name: "Git", category: "Tools", icon: "GitBranch" },
+  { id: "12", name: "Agile Methodologies", category: "Soft Skills", icon: "Workflow" },
 ]
 
-// Map of skill names to icons
-const skillIcons: Record<string, React.ReactNode> = {
-  // Frontend
-  JavaScript: <Code className="h-5 w-5" />,
-  TypeScript: <Code className="h-5 w-5" />,
-  React: <Code className="h-5 w-5" />,
-  "Next.js": <Code className="h-5 w-5" />,
-  "HTML/CSS": <Globe className="h-5 w-5" />,
-  "Tailwind CSS": <Code className="h-5 w-5" />,
-
-  // Backend
-  "Node.js": <Server className="h-5 w-5" />,
-  Express: <Server className="h-5 w-5" />,
-  GraphQL: <Database className="h-5 w-5" />,
-  "REST API Design": <Globe className="h-5 w-5" />,
-  MongoDB: <Database className="h-5 w-5" />,
-  PostgreSQL: <Database className="h-5 w-5" />,
-
-  // DevOps & Cloud
-  AWS: <Server className="h-5 w-5" />,
-  Docker: <Layers className="h-5 w-5" />,
-  "CI/CD": <Workflow className="h-5 w-5" />,
-  Firebase: <Database className="h-5 w-5" />,
-
-  // Other
-  Git: <GitBranch className="h-5 w-5" />,
-  Testing: <Cpu className="h-5 w-5" />,
-  "Agile Methodologies": <Workflow className="h-5 w-5" />,
-  "Technical Leadership": <Users className="h-5 w-5" />,
-  "Machine Learning": <BrainCircuit className="h-5 w-5" />,
+// Map of icon names to components
+const iconComponents: Record<string, LucideIcon> = {
+  Code,
+  Database,
+  Server,
+  Globe,
+  Cpu,
+  GitBranch,
+  Layers,
+  Workflow,
+  BrainCircuit,
+  Users,
+  Cloud,
+  Terminal,
+  Laptop,
+  Smartphone,
+  Zap,
+  FileCode,
+  Puzzle,
+  Tool,
+  Wrench,
+  Settings,
 }
 
 // Default icon for skills without a specific icon
@@ -168,14 +182,11 @@ export function SkillsSection() {
 
         const [skillsData, visibilityData] = await Promise.all([skillsPromise, visibilityPromise])
 
-        // Remove the level property from skills if it exists
-        const simplifiedSkills = skillsData.map(({ id, name, category }) => ({ id, name, category }))
-
         if (isMounted) {
-          setSkills(simplifiedSkills)
+          setSkills(skillsData)
 
           // Extract unique categories
-          const uniqueCategories = Array.from(new Set(simplifiedSkills.map((skill) => skill.category)))
+          const uniqueCategories = Array.from(new Set(skillsData.map((skill) => skill.category)))
           setCategories(uniqueCategories)
 
           setIsVisible(visibilityData)
@@ -205,8 +216,29 @@ export function SkillsSection() {
     }
   }, [])
 
+  // Function to render the icon for a skill
+  const renderSkillIcon = (skill: Skill) => {
+    // Priority 1: Use custom uploaded icon if available
+    if (skill.iconUrl) {
+      return (
+        <div className="h-full w-full overflow-hidden rounded-full">
+          <img src={skill.iconUrl || "/placeholder.svg"} alt={skill.name} className="h-full w-full object-cover" />
+        </div>
+      )
+    }
+
+    // Priority 2: Use built-in Lucide icon if specified
+    if (skill.icon && iconComponents[skill.icon]) {
+      const IconComponent = iconComponents[skill.icon]
+      return <IconComponent className="h-5 w-5" />
+    }
+
+    // Priority 3: Fall back to default icon
+    return defaultIcon
+  }
+
   if (isLoading) {
-    return <div className="h-40 w-full animate-pulse rounded-lg bg-muted"></div>
+    return <div className="h-60 w-full animate-pulse rounded-lg bg-muted"></div>
   }
 
   if (!isVisible) {
@@ -240,7 +272,7 @@ export function SkillsSection() {
                       <div
                         className={`flex h-8 w-8 items-center justify-center rounded-full ${colorStyle.bg} ${colorStyle.text}`}
                       >
-                        {skillIcons[skill.name] || defaultIcon}
+                        {renderSkillIcon(skill)}
                       </div>
                       <span className="font-medium">{skill.name}</span>
                     </div>
