@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Github, Linkedin, Mail, MapPin, Phone, Send } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,6 +10,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/hooks/use-toast"
 import { submitContactForm } from "@/lib/firebase/contact"
+import { fetchProfile } from "@/lib/firebase/profile"
+import { fetchSectionVisibility } from "@/lib/firebase/sections"
 
 export function ContactSection() {
   const [formData, setFormData] = useState({
@@ -18,8 +20,47 @@ export function ContactSection() {
     subject: "",
     message: "",
   })
+  const [profileData, setProfileData] = useState<{
+    email: string
+    phone: string
+    location: string
+    github: string
+    linkedin: string
+  } | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isVisible, setIsVisible] = useState(true)
   const { toast } = useToast()
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setIsLoading(true)
+
+        // Fetch profile and visibility in parallel
+        const [profile, visibilityData] = await Promise.all([
+          fetchProfile(),
+          fetchSectionVisibility("contact").catch(() => true), // Default to visible if error
+        ])
+
+        setProfileData({
+          email: profile.email,
+          phone: profile.phone,
+          location: profile.location,
+          github: profile.github,
+          linkedin: profile.linkedin,
+        })
+        setIsVisible(visibilityData)
+      } catch (error) {
+        console.error("Error loading contact section:", error)
+        // Default contact info will be used from the fetchProfile function
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -54,6 +95,14 @@ export function ContactSection() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (isLoading) {
+    return <div className="h-60 w-full animate-pulse rounded-lg bg-muted"></div>
+  }
+
+  if (!isVisible) {
+    return null
   }
 
   return (
@@ -118,15 +167,18 @@ export function ContactSection() {
               <MapPin className="mt-0.5 h-5 w-5 text-muted-foreground" />
               <div>
                 <h3 className="font-medium">Location</h3>
-                <p className="text-sm text-muted-foreground">San Francisco, CA</p>
+                <p className="text-sm text-muted-foreground">{profileData?.location || "Location not available"}</p>
               </div>
             </div>
             <div className="flex items-start space-x-4">
               <Mail className="mt-0.5 h-5 w-5 text-muted-foreground" />
               <div>
                 <h3 className="font-medium">Email</h3>
-                <a href="mailto:contact@example.com" className="text-sm text-muted-foreground hover:text-foreground">
-                  contact@example.com
+                <a
+                  href={`mailto:${profileData?.email}`}
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  {profileData?.email || "Email not available"}
                 </a>
               </div>
             </div>
@@ -134,8 +186,8 @@ export function ContactSection() {
               <Phone className="mt-0.5 h-5 w-5 text-muted-foreground" />
               <div>
                 <h3 className="font-medium">Phone</h3>
-                <a href="tel:+1234567890" className="text-sm text-muted-foreground hover:text-foreground">
-                  +1 (234) 567-890
+                <a href={`tel:${profileData?.phone}`} className="text-sm text-muted-foreground hover:text-foreground">
+                  {profileData?.phone || "Phone not available"}
                 </a>
               </div>
             </div>
@@ -144,12 +196,14 @@ export function ContactSection() {
               <div>
                 <h3 className="font-medium">GitHub</h3>
                 <a
-                  href="https://github.com"
+                  href={profileData?.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  github.com/username
+                  {profileData?.github
+                    ? profileData.github.replace(/^https?:\/\//, "").replace(/\/$/, "")
+                    : "GitHub not available"}
                 </a>
               </div>
             </div>
@@ -158,12 +212,14 @@ export function ContactSection() {
               <div>
                 <h3 className="font-medium">LinkedIn</h3>
                 <a
-                  href="https://linkedin.com"
+                  href={profileData?.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-muted-foreground hover:text-foreground"
                 >
-                  linkedin.com/in/username
+                  {profileData?.linkedin
+                    ? profileData.linkedin.replace(/^https?:\/\//, "").replace(/\/$/, "")
+                    : "LinkedIn not available"}
                 </a>
               </div>
             </div>
