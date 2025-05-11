@@ -8,12 +8,45 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { FadeIn } from "@/components/animations/fade-in"
 import { ScaleIn } from "@/components/animations/scale-in"
+import { fetchProfile } from "@/lib/firebase/profile"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function HeroSection() {
   const [mounted, setMounted] = useState(false)
+  const [profileData, setProfileData] = useState<{
+    name: string
+    title: string
+    imageUrl: string
+    email: string
+    phone: string
+    github: string
+    linkedin: string
+  } | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     setMounted(true)
+
+    const loadProfileData = async () => {
+      try {
+        const profile = await fetchProfile()
+        setProfileData({
+          name: profile.name,
+          title: profile.title,
+          imageUrl: profile.imageUrl,
+          email: profile.email,
+          phone: profile.phone,
+          github: profile.github,
+          linkedin: profile.linkedin,
+        })
+      } catch (error) {
+        console.error("Error loading profile data:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadProfileData()
   }, [])
 
   if (!mounted) return null
@@ -37,7 +70,7 @@ export function HeroSection() {
             <FadeIn delay={0.2} direction="up">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Senior Software Engineer
+                  {isLoading ? <Skeleton className="h-12 w-3/4" /> : profileData?.title || "Senior Software Engineer"}
                 </h1>
                 <p className="max-w-[600px] text-white/80 md:text-xl">
                   Building innovative solutions with cutting-edge technologies. Passionate about creating efficient,
@@ -64,46 +97,69 @@ export function HeroSection() {
             </FadeIn>
             <FadeIn delay={0.6} direction="up">
               <div className="flex items-center gap-4 text-white/80">
-                <Link
-                  href="https://github.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  <Github className="h-5 w-5" />
-                  <span className="sr-only">GitHub</span>
-                </Link>
-                <Link
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors"
-                >
-                  <Linkedin className="h-5 w-5" />
-                  <span className="sr-only">LinkedIn</span>
-                </Link>
-                <Link href="mailto:contact@example.com" className="hover:text-white transition-colors">
-                  <Mail className="h-5 w-5" />
-                  <span className="sr-only">Email</span>
-                </Link>
-                <Link href="tel:+1234567890" className="hover:text-white transition-colors">
-                  <Phone className="h-5 w-5" />
-                  <span className="sr-only">Phone</span>
-                </Link>
+                {isLoading ? (
+                  <>
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                    <Skeleton className="h-5 w-5 rounded-full" />
+                  </>
+                ) : (
+                  <>
+                    {profileData?.github && (
+                      <Link
+                        href={profileData.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-white transition-colors"
+                      >
+                        <Github className="h-5 w-5" />
+                        <span className="sr-only">GitHub</span>
+                      </Link>
+                    )}
+                    {profileData?.linkedin && (
+                      <Link
+                        href={profileData.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-white transition-colors"
+                      >
+                        <Linkedin className="h-5 w-5" />
+                        <span className="sr-only">LinkedIn</span>
+                      </Link>
+                    )}
+                    {profileData?.email && (
+                      <Link href={`mailto:${profileData.email}`} className="hover:text-white transition-colors">
+                        <Mail className="h-5 w-5" />
+                        <span className="sr-only">Email</span>
+                      </Link>
+                    )}
+                    {profileData?.phone && (
+                      <Link href={`tel:${profileData.phone}`} className="hover:text-white transition-colors">
+                        <Phone className="h-5 w-5" />
+                        <span className="sr-only">Phone</span>
+                      </Link>
+                    )}
+                  </>
+                )}
               </div>
             </FadeIn>
           </div>
           <ScaleIn delay={0.3} duration={1.2}>
             <div className="flex items-center justify-center">
               <div className="relative aspect-square w-full max-w-[400px] overflow-hidden rounded-full border border-white/20 bg-white/10 backdrop-blur-sm">
-                <Image
-                  src="/placeholder.svg?height=400&width=400"
-                  alt="Profile"
-                  width={400}
-                  height={400}
-                  className="object-cover"
-                  priority
-                />
+                {isLoading ? (
+                  <Skeleton className="h-full w-full rounded-full" />
+                ) : (
+                  <Image
+                    src={profileData?.imageUrl || "/placeholder.svg?height=400&width=400"}
+                    alt="Profile"
+                    width={400}
+                    height={400}
+                    className="object-cover"
+                    priority
+                  />
+                )}
               </div>
             </div>
           </ScaleIn>
