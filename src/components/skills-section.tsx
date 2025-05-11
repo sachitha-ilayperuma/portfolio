@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { fetchSkills } from "@/lib/firebase/skills"
+import { fetchSkillCategories, type SkillCategory } from "@/lib/firebase/skill-categories"
 import { fetchSectionVisibility } from "@/lib/firebase/sections"
 import { checkFirebaseAvailability } from "@/lib/firebase/config"
 import {
@@ -37,22 +38,33 @@ interface Skill {
   category: string
   icon?: string
   iconUrl?: string
+  order?: number
 }
 
 // Default skills data
 const DEFAULT_SKILLS: Skill[] = [
-  { id: "1", name: "JavaScript", category: "Frontend", icon: "Code" },
-  { id: "2", name: "React", category: "Frontend", icon: "Code" },
-  { id: "3", name: "TypeScript", category: "Frontend", icon: "Code" },
-  { id: "4", name: "HTML/CSS", category: "Frontend", icon: "Globe" },
-  { id: "5", name: "Node.js", category: "Backend", icon: "Server" },
-  { id: "6", name: "Express", category: "Backend", icon: "Server" },
-  { id: "7", name: "MongoDB", category: "Backend", icon: "Database" },
-  { id: "8", name: "PostgreSQL", category: "Backend", icon: "Database" },
-  { id: "9", name: "AWS", category: "DevOps & Cloud", icon: "Cloud" },
-  { id: "10", name: "Docker", category: "DevOps & Cloud", icon: "Layers" },
-  { id: "11", name: "Git", category: "Tools", icon: "GitBranch" },
-  { id: "12", name: "Agile Methodologies", category: "Soft Skills", icon: "Workflow" },
+  { id: "1", name: "JavaScript", category: "Frontend", icon: "Code", order: 1 },
+  { id: "2", name: "React", category: "Frontend", icon: "Code", order: 2 },
+  { id: "3", name: "TypeScript", category: "Frontend", icon: "Code", order: 3 },
+  { id: "4", name: "HTML/CSS", category: "Frontend", icon: "Globe", order: 4 },
+  { id: "5", name: "Node.js", category: "Backend", icon: "Server", order: 1 },
+  { id: "6", name: "Express", category: "Backend", icon: "Server", order: 2 },
+  { id: "7", name: "MongoDB", category: "Backend", icon: "Database", order: 3 },
+  { id: "8", name: "PostgreSQL", category: "Backend", icon: "Database", order: 4 },
+  { id: "9", name: "AWS", category: "DevOps & Cloud", icon: "Cloud", order: 1 },
+  { id: "10", name: "Docker", category: "DevOps & Cloud", icon: "Layers", order: 2 },
+  { id: "11", name: "Git", category: "Tools", icon: "GitBranch", order: 1 },
+  { id: "12", name: "Agile Methodologies", category: "Soft Skills", icon: "Users", order: 1 },
+]
+
+// Default categories with order
+const DEFAULT_CATEGORIES: SkillCategory[] = [
+  { id: "frontend", name: "Frontend", order: 1 },
+  { id: "backend", name: "Backend", order: 2 },
+  { id: "devops", name: "DevOps & Cloud", order: 3 },
+  { id: "tools", name: "Tools", order: 4 },
+  { id: "softskills", name: "Soft Skills", order: 5 },
+  { id: "other", name: "Other", order: 6 },
 ]
 
 // Map of icon names to components
@@ -140,7 +152,7 @@ export function SkillsSection() {
   const [skills, setSkills] = useState<Skill[]>([])
   const [isVisible, setIsVisible] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
-  const [categories, setCategories] = useState<string[]>([])
+  const [categories, setCategories] = useState<SkillCategory[]>([])
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
@@ -155,24 +167,25 @@ export function SkillsSection() {
         const isFirebaseAvailable = checkFirebaseAvailability()
 
         if (!isFirebaseAvailable) {
-          console.log("Firebase is not available. Using default skills data in component.")
+          console.log("Firebase is not available. Using default data in component.")
           if (isMounted) {
             setSkills(DEFAULT_SKILLS)
-
-            // Extract unique categories from default skills
-            const uniqueCategories = Array.from(new Set(DEFAULT_SKILLS.map((skill) => skill.category)))
-            setCategories(uniqueCategories)
-
+            setCategories(DEFAULT_CATEGORIES)
             setIsVisible(true)
             setIsLoading(false)
           }
           return
         }
 
-        // Fetch skills and visibility in parallel with error handling
+        // Fetch skills, categories, and visibility in parallel with error handling
         const skillsPromise = fetchSkills().catch((err) => {
           console.error("Error fetching skills:", err)
           return DEFAULT_SKILLS
+        })
+
+        const categoriesPromise = fetchSkillCategories().catch((err) => {
+          console.error("Error fetching skill categories:", err)
+          return DEFAULT_CATEGORIES
         })
 
         const visibilityPromise = fetchSectionVisibility("skills").catch((err) => {
@@ -180,26 +193,22 @@ export function SkillsSection() {
           return true
         })
 
-        const [skillsData, visibilityData] = await Promise.all([skillsPromise, visibilityPromise])
+        const [skillsData, categoriesData, visibilityData] = await Promise.all([
+          skillsPromise,
+          categoriesPromise,
+          visibilityPromise,
+        ])
 
         if (isMounted) {
           setSkills(skillsData)
-
-          // Extract unique categories
-          const uniqueCategories = Array.from(new Set(skillsData.map((skill) => skill.category)))
-          setCategories(uniqueCategories)
-
+          setCategories(categoriesData)
           setIsVisible(visibilityData)
         }
       } catch (err) {
         console.error("Error loading skills section:", err)
         if (isMounted) {
           setSkills(DEFAULT_SKILLS)
-
-          // Extract unique categories from default skills
-          const uniqueCategories = Array.from(new Set(DEFAULT_SKILLS.map((skill) => skill.category)))
-          setCategories(uniqueCategories)
-
+          setCategories(DEFAULT_CATEGORIES)
           setError("Using default skills data due to connection issues.")
         }
       } finally {
@@ -237,6 +246,21 @@ export function SkillsSection() {
     return defaultIcon
   }
 
+  // Sort skills by order within each category
+  const getSortedSkills = (categoryName: string, skillsList: Skill[]) => {
+    return [...skillsList]
+      .filter((skill) => skill.category === categoryName)
+      .sort((a, b) => {
+        // Default to 1 if order is not specified (instead of 999)
+        const orderA = a.order ?? 1
+        const orderB = b.order ?? 1
+        return orderA - orderB
+      })
+  }
+
+  // Sort categories by their order
+  const sortedCategories = [...categories].sort((a, b) => a.order - b.order)
+
   if (isLoading) {
     return <div className="h-60 w-full animate-pulse rounded-lg bg-muted"></div>
   }
@@ -256,16 +280,21 @@ export function SkillsSection() {
         </div>
       )}
       <StaggerIn direction="up" delayIncrement={0.15} threshold={0.1} className="grid gap-6 md:grid-cols-2">
-        {categories.map((category) => {
-          const categorySkills = skills.filter((skill) => skill.category === category)
-          const colorStyle = getCategoryColor(category)
-          const borderColor = getCategoryBorderColor(category)
-          const headingColor = getCategoryHeadingColor(category)
+        {sortedCategories.map((category) => {
+          // Get skills for this category
+          const categorySkills = getSortedSkills(category.name, skills)
+
+          // Skip empty categories
+          if (categorySkills.length === 0) return null
+
+          const colorStyle = getCategoryColor(category.name)
+          const borderColor = getCategoryBorderColor(category.name)
+          const headingColor = getCategoryHeadingColor(category.name)
 
           return (
-            <Card key={category} className={`border-2 ${borderColor}`}>
+            <Card key={category.id} className={`border-2 ${borderColor}`}>
               <CardContent className="p-6">
-                <h3 className={`mb-4 text-xl font-semibold ${headingColor}`}>{category}</h3>
+                <h3 className={`mb-4 text-xl font-semibold ${headingColor}`}>{category.name}</h3>
                 <StaggerIn direction="up" delayIncrement={0.05} initialDelay={0.1} className="grid grid-cols-2 gap-4">
                   {categorySkills.map((skill) => (
                     <div key={skill.id} className="flex items-center gap-2">

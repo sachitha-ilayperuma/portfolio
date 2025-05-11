@@ -186,7 +186,7 @@ export function ProjectsSection() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-grow">
-                <p className="text-muted-foreground">{project.description}</p>
+                <p className="text-muted-foreground line-clamp-4 h-24 overflow-hidden">{project.description}</p>
               </CardContent>
               <CardFooter className="flex gap-2">
                 <Button

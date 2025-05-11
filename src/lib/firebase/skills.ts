@@ -5,16 +5,18 @@ const COLLECTION_NAME = "skills"
 
 // Default skills data
 const DEFAULT_SKILLS = [
-  { id: "1", name: "JavaScript", category: "Frontend", icon: "Code" },
-  { id: "2", name: "React", category: "Frontend", icon: "Code" },
-  { id: "3", name: "TypeScript", category: "Frontend", icon: "Code" },
-  { id: "4", name: "Node.js", category: "Backend", icon: "Server" },
-  { id: "5", name: "Express", category: "Backend", icon: "Server" },
-  { id: "6", name: "Firebase", category: "Backend", icon: "Database" },
-  { id: "7", name: "Git", category: "Tools", icon: "GitBranch" },
-  { id: "8", name: "AWS", category: "DevOps & Cloud", icon: "Cloud" },
-  { id: "9", name: "Docker", category: "DevOps & Cloud", icon: "Layers" },
-  { id: "10", name: "Agile Methodologies", category: "Soft Skills", icon: "Users" },
+  { id: "1", name: "JavaScript", category: "Frontend", icon: "Code", order: 1 },
+  { id: "2", name: "React", category: "Frontend", icon: "Code", order: 2 },
+  { id: "3", name: "TypeScript", category: "Frontend", icon: "Code", order: 3 },
+  { id: "4", name: "HTML/CSS", category: "Frontend", icon: "Globe", order: 4 },
+  { id: "5", name: "Node.js", category: "Backend", icon: "Server", order: 1 },
+  { id: "6", name: "Express", category: "Backend", icon: "Server", order: 2 },
+  { id: "7", name: "MongoDB", category: "Backend", icon: "Database", order: 3 },
+  { id: "8", name: "PostgreSQL", category: "Backend", icon: "Database", order: 4 },
+  { id: "9", name: "AWS", category: "DevOps & Cloud", icon: "Cloud", order: 1 },
+  { id: "10", name: "Docker", category: "DevOps & Cloud", icon: "Layers", order: 2 },
+  { id: "11", name: "Git", category: "Tools", icon: "GitBranch", order: 1 },
+  { id: "12", name: "Agile Methodologies", category: "Soft Skills", icon: "Users", order: 1 },
 ]
 
 export interface Skill {
@@ -24,6 +26,7 @@ export interface Skill {
   category: string
   icon?: string // Lucide icon name
   iconUrl?: string // Custom uploaded icon URL
+  order?: number // Add order field for sorting
 }
 
 export async function fetchSkills(): Promise<Skill[]> {

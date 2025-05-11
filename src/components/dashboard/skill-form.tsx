@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { addSkill, updateSkill } from "@/lib/firebase/skills"
+import { fetchSkillCategories, type SkillCategory } from "@/lib/firebase/skill-categories"
 import { uploadSkillIcon } from "@/lib/firebase/storage"
 import {
   Code,
@@ -44,6 +45,7 @@ interface Skill {
   category: string
   icon?: string
   iconUrl?: string
+  order?: number
 }
 
 interface SkillFormProps {
@@ -82,12 +84,35 @@ export function SkillForm({ skill, onSave, onCancel }: SkillFormProps) {
     category: "",
     icon: "",
     iconUrl: "",
+    order: 1, // Changed default to 1 instead of 999
   })
+  const [categories, setCategories] = useState<SkillCategory[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [iconFile, setIconFile] = useState<File | null>(null)
   const [iconPreview, setIconPreview] = useState<string | null>(null)
   const [iconTab, setIconTab] = useState<string>("builtin")
   const { toast } = useToast()
+
+  // Fetch categories when component mounts
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const categoriesData = await fetchSkillCategories()
+        // Sort categories by order
+        const sortedCategories = [...categoriesData].sort((a, b) => a.order - b.order)
+        setCategories(sortedCategories)
+      } catch (error) {
+        console.error("Error loading categories:", error)
+        toast({
+          title: "Error",
+          description: "Failed to load skill categories",
+          variant: "destructive",
+        })
+      }
+    }
+
+    loadCategories()
+  }, [toast])
 
   useEffect(() => {
     if (skill) {
@@ -96,6 +121,7 @@ export function SkillForm({ skill, onSave, onCancel }: SkillFormProps) {
         category: skill.category,
         icon: skill.icon || "",
         iconUrl: skill.iconUrl || "",
+        order: skill.order || 1, // Default to 1 if not set
       })
 
       // Set the active tab based on which icon type is present
@@ -109,7 +135,14 @@ export function SkillForm({ skill, onSave, onCancel }: SkillFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+
+    // Handle numeric values for order
+    if (name === "order") {
+      const orderValue = Number.parseInt(value)
+      setFormData((prev) => ({ ...prev, [name]: isNaN(orderValue) ? 1 : orderValue }))
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }))
+    }
   }
 
   const handleCategoryChange = (value: string) => {
@@ -217,14 +250,29 @@ export function SkillForm({ skill, onSave, onCancel }: SkillFormProps) {
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Frontend">Frontend</SelectItem>
-            <SelectItem value="Backend">Backend</SelectItem>
-            <SelectItem value="DevOps & Cloud">DevOps & Cloud</SelectItem>
-            <SelectItem value="Tools">Tools</SelectItem>
-            <SelectItem value="Soft Skills">Soft Skills</SelectItem>
-            <SelectItem value="Other">Other</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.name}>
+                {category.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="order">Display Order</Label>
+        <Input
+          id="order"
+          name="order"
+          type="number"
+          min="1"
+          value={formData.order}
+          onChange={handleChange}
+          placeholder="Enter display order (lower numbers appear first)"
+        />
+        <p className="text-xs text-muted-foreground">
+          Skills with lower order numbers will appear first in their category.
+        </p>
       </div>
 
       <div className="space-y-2">

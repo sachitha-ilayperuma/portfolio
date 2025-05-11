@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BarChart3, Layers, LogOut, Settings, User, Briefcase, GraduationCap, Heart, Code } from "lucide-react"
+import { BarChart3, Layers, LogOut, Settings, User, Briefcase, GraduationCap, Heart, Code, Mail } from "lucide-react"
 
 import {
   Sidebar,
@@ -73,6 +73,14 @@ export function DashboardSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/skill-categories")} tooltip="Skill Categories">
+              <Link href="/dashboard/skill-categories">
+                <Layers />
+                <span>Skill Categories</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
             <SidebarMenuButton asChild isActive={isActive("/dashboard/experience")} tooltip="Experience">
               <Link href="/dashboard/experience">
                 <Briefcase />
@@ -93,6 +101,14 @@ export function DashboardSidebar() {
               <Link href="/dashboard/interests">
                 <Heart />
                 <span>Interests</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild isActive={isActive("/dashboard/contact")} tooltip="Contact">
+              <Link href="/dashboard/contact">
+                <Mail />
+                <span>Contact</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

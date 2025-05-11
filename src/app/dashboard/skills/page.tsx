@@ -17,11 +17,15 @@ import { useToast } from "@/hooks/use-toast"
 import { SkillForm } from "@/components/dashboard/skill-form"
 import { fetchSkills, deleteSkill } from "@/lib/firebase/skills"
 import { Loader } from "@/components/ui/loader"
+import { Badge } from "@/components/ui/badge"
 
 interface Skill {
   id: string
   name: string
   category: string
+  icon?: string
+  iconUrl?: string
+  order?: number
 }
 
 export default function SkillsPage() {
@@ -102,7 +106,7 @@ export default function SkillsPage() {
     return <Loader />
   }
 
-  // Group skills by category
+  // Group skills by category and sort by order
   const skillsByCategory = skills.reduce(
     (acc, skill) => {
       if (!acc[skill.category]) {
@@ -113,6 +117,15 @@ export default function SkillsPage() {
     },
     {} as Record<string, Skill[]>,
   )
+
+  // Sort skills within each category
+  Object.keys(skillsByCategory).forEach((category) => {
+    skillsByCategory[category].sort((a, b) => {
+      const orderA = a.order ?? 999
+      const orderB = b.order ?? 999
+      return orderA - orderB
+    })
+  })
 
   return (
     <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
@@ -146,7 +159,12 @@ export default function SkillsPage() {
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {categorySkills.map((skill) => (
                 <div key={skill.id} className="flex items-center justify-between rounded-md border p-4">
-                  <div className="font-medium">{skill.name}</div>
+                  <div className="flex items-center gap-2">
+                    <div className="font-medium">{skill.name}</div>
+                    <Badge variant="outline" className="ml-2">
+                      Order: {skill.order ?? 999}
+                    </Badge>
+                  </div>
                   <div className="flex space-x-2">
                     <Button variant="outline" size="icon" onClick={() => handleEditSkill(skill)}>
                       <Edit className="h-4 w-4" />
