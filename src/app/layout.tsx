@@ -15,9 +15,8 @@ import "@/lib/firebase/config"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Senior Software Engineer Portfolio",
-  description: "Professional portfolio showcasing projects, skills, and experience",
-    generator: 'v0.dev'
+  title: "Sachitha Ilayperuma",
+  description: "I'm a passionate web developer specializing in building responsive and user-friendly applications using React, Next.js, and Firebase. Explore my work and journey as I craft digital experiences with performance and design in mind.",
 }
 
 export default function RootLayout({

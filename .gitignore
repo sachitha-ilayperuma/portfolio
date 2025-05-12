@@ -21,6 +21,9 @@
 /.next/
 /out/
 
+# Firebase
+/.firebase/
+
 # production
 /build
 
