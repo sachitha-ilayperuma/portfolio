@@ -292,10 +292,10 @@ export function SkillsSection() {
           const headingColor = getCategoryHeadingColor(category.name)
 
           return (
-            <Card key={category.id} className={`border-2 ${borderColor}`}>
-              <CardContent className="p-6">
+            <Card key={category.id} className={`border-2 ${borderColor} h-full`}>
+              <CardContent className="p-6 h-full flex flex-col">
                 <h3 className={`mb-4 text-xl font-semibold ${headingColor}`}>{category.name}</h3>
-                <StaggerIn direction="up" delayIncrement={0.05} initialDelay={0.1} className="grid grid-cols-2 gap-4">
+                <StaggerIn direction="up" delayIncrement={0.05} initialDelay={0.1} className="grid grid-cols-2 gap-4 flex-grow">
                   {categorySkills.map((skill) => (
                     <div key={skill.id} className="flex items-center gap-2">
                       <div

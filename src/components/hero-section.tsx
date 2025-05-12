@@ -70,7 +70,7 @@ export function HeroSection() {
             <FadeIn delay={0.2} direction="up">
               <div className="space-y-2">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  {isLoading ? <Skeleton className="h-12 w-3/4" /> : profileData?.title || "Senior Software Engineer"}
+                  {isLoading ? <Skeleton className="h-12 w-3/4" /> : profileData?.name || "Senior Software Engineer"}
                 </h1>
                 <p className="max-w-[600px] text-white/80 md:text-xl">
                   Building innovative solutions with cutting-edge technologies. Passionate about creating efficient,
@@ -88,7 +88,7 @@ export function HeroSection() {
                 <Link href="#projects">
                   <Button
                     variant="outline"
-                    className="w-full min-[400px]:w-auto border-white text-white hover:bg-white/10 dark:text-white"
+                    className="w-full min-[400px]:w-auto border-white text-black hover:bg-white/10 dark:text-white"
                   >
                     View Projects
                   </Button>

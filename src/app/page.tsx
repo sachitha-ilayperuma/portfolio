@@ -20,15 +20,17 @@ export default function Home() {
           <ProfileSection />
         </Suspense>
 
-        <Suspense fallback={<Skeleton className="h-[600px] w-full mt-12" />}>
-          <ProjectsSection />
-        </Suspense>
-
         <Suspense fallback={<Skeleton className="h-[400px] w-full mt-12" />}>
           <SkillsSection />
         </Suspense>
 
-        {/* Experience Section with Dark Red Background */}
+        <Suspense fallback={<Skeleton className="h-[600px] w-full mt-12" />}>
+          <ProjectsSection />
+        </Suspense>
+
+
+
+        
         <Suspense fallback={<Skeleton className="h-[500px] w-full mt-12" />}>
           <ExperienceSection />
         </Suspense>
