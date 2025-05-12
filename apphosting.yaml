@@ -7,11 +7,6 @@ runConfig:
   # cpu: 1
   # memoryMiB: 512
 
-env:
-  - variable: NPM_CONFIG_FORCE
-    value: "true"
-    availability:
-      - BUILD
 # Environment variables and secrets.
 # env:
   # Configure environment variables.
