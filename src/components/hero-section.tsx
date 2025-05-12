@@ -52,7 +52,7 @@ export function HeroSection() {
   if (!mounted) return null
 
   return (
-    <section className="hero-gradient relative h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="hero-gradient relative min-h-[90vh] flex items-center justify-center overflow-hidden lg:pb-0 pb-10">
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px] opacity-20" />
       <motion.div
         className="absolute pointer-events-none inset-0 flex items-center justify-center"
@@ -68,7 +68,7 @@ export function HeroSection() {
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
           <div className="flex flex-col justify-center space-y-4">
             <FadeIn delay={0.2} direction="up">
-              <div className="space-y-2">
+              <div className="space-y-2 mt-32 lg:mt-0">
                 <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                   {isLoading ? <Skeleton className="h-12 w-3/4" /> : profileData?.name || "Senior Software Engineer"}
                 </h1>

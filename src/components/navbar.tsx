@@ -80,7 +80,7 @@ export function Navbar() {
               <span className="sr-only">Close menu</span>
             </Button>
           </div>
-          <nav className="container grid gap-6 px-4 py-6">
+          <nav className="container grid gap-6 px-4 py-6 bg-white">
             <Link
               href="/#projects"
               className="text-lg font-medium transition-colors hover:text-primary"
