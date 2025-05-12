@@ -7,7 +7,7 @@ import { ArrowLeft, ExternalLink, Github, Calendar, CheckCircle2 } from "lucide-
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { fetchProject } from "@/lib/firebase/projects"
+import { fetchProject, fetchProjects } from "@/lib/firebase/projects"
 import { Loader } from "@/components/ui/loader"
 
 interface Project {
@@ -26,6 +26,7 @@ interface Project {
   challenges?: string
   duration?: string
 }
+
 
 export default function ProjectDetailPage({ params }: { params: { id: string } }) {
   const [project, setProject] = useState<Project | null>(null)

@@ -131,6 +131,7 @@ export async function fetchProject(id: string): Promise<Project> {
   }
 }
 
+
 export async function addProject(projectData: Omit<Project, "id">): Promise<Project> {
   if (!checkFirebaseAvailability()) {
     throw new Error("Firebase is not available. Cannot add project.")
