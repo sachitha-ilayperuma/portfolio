@@ -173,10 +173,10 @@ export function ProjectsSection() {
               </Link>
               <CardHeader>
                 <Link href={`/projects/${project.id}`} className="hover:underline">
-                  <CardTitle>{project.title}</CardTitle>
+                  <CardTitle className="h-12 overflow-hidden">{project.title}</CardTitle>
                 </Link>
-                <CardDescription>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                <CardDescription className="h-20 overflow-hidden">
+                  <div className="flex flex-wrap gap-2 mt-2 ">
                     {project.technologies.map((tech) => (
                       <Badge key={tech} className={getBadgeColor(tech)}>
                         {tech}
